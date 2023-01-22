@@ -1,0 +1,29 @@
+.movies{
+    width: 250px;
+   
+    /* background-color: rgb(255, 193, 127); */
+
+}
+.img{
+    
+    height: 450px;
+    width: 100%;
+    object-fit: cover;
+    /* border-radius: 100px; */
+}
+.ratings{
+display:flex;
+justify-content :space-between;
+align-items: center;
+}
+.movie-css{
+    /* display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: space-around; */
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    justify-items: center;
+    justify-content: space-around;
+}
+
