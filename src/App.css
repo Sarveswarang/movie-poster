@@ -25,5 +25,12 @@ align-items: center;
     grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
     justify-items: center;
     justify-content: space-around;
+    /* margin: 100px; */
 }
-
+.add-movie-form{
+    display: flex;
+    flex-flow: column;
+    width: 400px;
+    margin: 10px;
+    gap: 10px;
+}
