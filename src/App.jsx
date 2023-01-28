@@ -2,6 +2,18 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 // import{double} from './welcome'
 
 // console.log(double(4))
@@ -9,8 +21,8 @@ function App() {
   return (
     <div>
       
-          <Movielist/>
-      {/* <Color/> */}
+          {/* <Movielist/> */}
+      <Color/>
     </div>
 
 
@@ -123,10 +135,12 @@ const [summary, setsummary]=useState("")
     return (
       <div>
 <div className='add-movie-form'>
-  <input onChange={(a) => setname(a.target.value)} type="text" placeholder='name'/>
-  <input onChange={(a) => setposter(a.target.value)} type="text" placeholder='poster'/>
-  <input onChange={(a) => setrating(a.target.value)}type="text" placeholder='rating'/>
-  <input onChange={(a) => setsummary(a.target.value)}type="text" placeholder='summary'/>
+<TextField onChange={(a) => setname(a.target.value)} label="name" variant="outlined" />
+<TextField onChange={(a) => setposter(a.target.value)} label="poster" variant="outlined" />
+<TextField onChange={(a) => setrating(a.target.value)} label="rating" variant="outlined" />
+<TextField onChange={(a) => setsummary(a.target.value)} label="summary" variant="outlined" />
+
+  
   {/* <button ></button> */}
   <Button onClick={()=>{
     const newmovie={name:name,
@@ -155,17 +169,26 @@ setmovieflow([...movieflow,newmovie]);
       color: movie.rating > 8 ? "green" : "crimson",
     }
     return (
-      <div className='movies'>
+      <Card className='movies'>
         <img className='img' src={movie.poster}></img>
-        <div className='ratings'>
-          <h1>{movie.name}</h1>
+        <CardContent>
+          <div className='ratings'>
+          <h2>{movie.name}  
+          <IconButton color="primary" onClick={() => setshow(!show)} aria-label="toogle">
+  {show?<ExpandLessIcon />: <ExpandMoreIcon />}
+</IconButton></h2>
           <h1 style={style}>{movie.rating}⭐</h1>
         </div>
-        <button onClick={() => setshow(!show)}>toogle</button>
+             
+        
         <p style={disstyle}>{movie.summary}</p>
+        </CardContent>
+        <CardActions>
         <Like />
-
-      </div>
+        </CardActions>
+        
+      
+      </Card>
     );
   }
 
@@ -175,8 +198,18 @@ setmovieflow([...movieflow,newmovie]);
 
     return (
       <div>
-        <button onClick={() => (setlike(like + 1))}>👍{like}</button>
-        <button onClick={() => (setdislike(dislike + 1))}>👎{dislike}</button>
+        <IconButton color="primary" onClick={() => (setlike(like + 1))} aria-label="like movie">
+        <Badge badgeContent={like} color="primary">
+👍
+    </Badge>
+</IconButton>
+
+<IconButton color="error" onClick={() => (setdislike(dislike + 1))} aria-label="dslike movi">
+<Badge badgeContent={dislike} color="error">
+👎
+    </Badge>
+</IconButton>
+        
 
       </div>
     );

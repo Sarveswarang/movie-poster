@@ -1,5 +1,7 @@
 .movies{
     width: 250px;
+    margin: 10px;
+    height: min-content;
    
     /* background-color: rgb(255, 193, 127); */
 
