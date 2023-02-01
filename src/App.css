@@ -36,3 +36,15 @@ align-items: center;
     margin: 10px;
     gap: 10px;
 }
+.error{
+    width: 100%;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    text-align:center;
+    text-transform: uppercase;
+    margin-top: 100px;
+}
+.detail_movies{
+    max-width: 500px;
+}
