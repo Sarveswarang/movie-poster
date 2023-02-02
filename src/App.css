@@ -1,6 +1,6 @@
 .movies{
     width: 250px;
-    margin: 10px;
+     margin: 0px;  
     height: min-content;
    
     /* background-color: rgb(255, 193, 127); */
@@ -48,3 +48,9 @@ align-items: center;
 .detail_movies{
     max-width: 500px;
 }
+body{
+    margin: 0px;
+}
+.modecorner{
+    margin-left: auto;
+  }

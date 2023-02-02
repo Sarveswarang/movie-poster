@@ -18,6 +18,16 @@ import{Color} from"./color game";
 import { Routes, Route, Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import MenuIcon from '@mui/icons-material/Menu';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import { dark } from '@mui/material/styles/createPalette';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import {Addmovie}from"./Add movie";
 // import { useNavigate } from 'react-router-dom';
 // import{double} from './welcome'
 
@@ -112,35 +122,61 @@ const trailer=[
     "id": "109"
   }
 ]
+ 
 
 function App() {
   const [movieflow,setmovieflow] =useState( trailer);
-  return (
+  const navigate=useNavigate();
+  const [mode,setmode] =useState("light");
+  const darkTheme = createTheme({
+    palette: {
+      mode: mode,
+    },
+  });
+  const bgstyle={
+borderRadius:"0px",
+minHeight:"100vh",
+  }
+  
+  return ( 
+   
+    <ThemeProvider theme={darkTheme}>
+       <Paper sx={bgstyle} elevation={4} >
     <div>
       
           {/* <Movielist/> */}
       {/* <Color/> */}
-      <nav>
-      <ul type="square">
-        <li ><Link to ="/">Home</Link></li>
-        <li><Link to="/Movielist" >movielist</Link></li>
-        <li><Link to="/color game">color game</Link></li>
+      <AppBar position="static">
+        <Toolbar>
+        <Button onClick={()=>navigate("/")}color="inherit">Home</Button>
+        <Button onClick={()=>navigate("/Movielist")} color="inherit">movielist</Button>
+        <Button onClick={()=>navigate("/color game")} color="inherit">color game</Button>
+        <Button onClick={()=>navigate("/Add movie")} color="inherit">Add movie</Button>
 
-      </ul>
-      </nav>
+<div className='modecorner'>
+        <Button onClick={()=>setmode(mode==="light"?"dark":"light")} color="inherit" startIcon={mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}>{mode==="light"?"dark":"light"} mode</Button>
+        </div>
+
+        </Toolbar>
+      </AppBar>
+     
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Movielist" element={<Movielist movieflow={movieflow} setmovieflow={setmovieflow}/>} />
         <Route path="/flimlist" element={ <Navigate replace to ="/Movielist"/>} />
         <Route path="/Movielist/:id" element={<Mdetails movieflow={movieflow}/>} />
         <Route path="/color game" element={<Color/>} />
+        <Route path="/Add movie" element={<Addmovie movieflow={movieflow} setmovieflow={setmovieflow}/>} />
+
         <Route path="*" element={<Not_found />} />
 
       </Routes>
     </div>
+    </ Paper>
+
+    </ThemeProvider>
   );
   function Mdetails({movieflow}){
-      // console.log(useParams());
         const {id} = useParams();
         const movie=movieflow[id];
         const style = {
@@ -194,33 +230,12 @@ function App() {
  
   function Movielist({movieflow,setmovieflow}) {
 
-    
-const [name, setname]=useState("")
-const [poster, setposter]=useState("")
-const [rating, setrating]=useState("")
-const [summary, setsummary]=useState("")
+    fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie")
+    .then((data)=>data.json())
+    .then((mvs)=>console.log(mvs))
 
-    return (
+    return ( 
       <div>
-<div className='add-movie-form'>
-<TextField onChange={(a) => setname(a.target.value)} label="name" variant="outlined" />
-<TextField onChange={(a) => setposter(a.target.value)} label="poster" variant="outlined" />
-<TextField onChange={(a) => setrating(a.target.value)} label="rating" variant="outlined" />
-<TextField onChange={(a) => setsummary(a.target.value)} label="summary" variant="outlined" />
-
-  
-  {/* <button ></button> */}
-  <Button onClick={()=>{
-    const newmovie={name:name,
-    poster:poster,
-    rating:rating,
-  summary:summary,
-} ;
-setmovieflow([...movieflow,newmovie]);
-  }} variant="contained">add movie</Button>
- 
-
-</div>
       
       <div className='movie-css'>
         {movieflow.map((nm, index) => (<Movie key={index} movie={nm} id={index}/>))}
@@ -287,6 +302,6 @@ setmovieflow([...movieflow,newmovie]);
     );
 
   }
-  
+ 
 }
 export default App
