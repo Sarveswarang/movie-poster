@@ -28,6 +28,7 @@ import { dark } from '@mui/material/styles/createPalette';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {Addmovie}from"./Add movie";
+import { Margin } from '@mui/icons-material';
 
 // import { useNavigate } from 'react-router-dom';
 // import{double} from './welcome'
@@ -37,7 +38,7 @@ import {Addmovie}from"./Add movie";
  
 
 function App() {
-  const [movieflow,setmovieflow] =useState( []);
+  // const [movieflow,setmovieflow] =useState( []);
   const navigate=useNavigate();
   const [mode,setmode] =useState("light");
   const darkTheme = createTheme({
@@ -49,11 +50,11 @@ function App() {
 borderRadius:"0px",
 minHeight:"100vh",
   };
-  useEffect(()=>{
-    fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie")
-    .then((data)=>data.json())
-    .then((mvs)=>setmovieflow(mvs))
-},[]);
+//   useEffect(()=>{
+//     fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie")
+//     .then((data)=>data.json())
+//     .then((mvs)=>setmovieflow(mvs))
+// },[]);
   
   return ( 
    
@@ -83,7 +84,7 @@ minHeight:"100vh",
         <Route path="/flimlist" element={ <Navigate replace to ="/Movielist"/>} />
         <Route path="/Movielist/:id" element={<Mdetails />} />
         <Route path="/color game" element={<Color/>} />
-        <Route path="/Add movie" element={<Addmovie movieflow={movieflow} setmovieflow={setmovieflow}/>} />
+        <Route path="/Add movie" element={<Addmovie />} />
 
         <Route path="*" element={<Not_found />} />
 
@@ -102,7 +103,7 @@ minHeight:"100vh",
       .then((data)=>data.json())
       .then((mvs)=>setmovie(mvs))
   },[id]);
-        // const movie=movieflow[id];
+        //  const movie=movieflow[id];
         const style = {
           color: movie.rating > 8 ? "green" : "crimson",
         };
@@ -154,15 +155,15 @@ minHeight:"100vh",
  
   function Movielist() {
     const [movieflow,setmovieflow] =useState( []);
-const getmovies = ()=>{
+const getmovies =()=>{
   fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie",{method: "GET"})
   .then((data)=>data.json())
   .then((mvs)=>setmovieflow(mvs))
 };
-    useEffect(()=>getmovies(),[]);
-  const deletemovie=(id)=>{
-    fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method: "DELETE"})
-    .then(()=>getmovies());
+    useEffect(()=>getmovies(),[]) ;
+  const deletemovie=async(id)=>{
+   await fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method: "DELETE"})
+    getmovies();
 
   };
     return ( 
@@ -170,23 +171,28 @@ const getmovies = ()=>{
       
       <div className='movie-css'>
         {movieflow.map((nm) => (<Movie key={nm.id} movie={nm} id={nm.id} 
-        deletebutton={<button onClick={()=>deletemovie(nm.id)}>delete</button>}/>))}
+        deletebutton={<IconButton color="error"sx={{marginLeft:"auto"}} 
+        onClick={()=>deletemovie(nm.id)}>{<DeleteIcon />}</IconButton >}/>))};
       </div>
       </div>
     );
   }
+  // <Button variant="contained">Contained</Button>
+  // <Button variant="outlined" startIcon={<DeleteIcon />}>
+//   Delete
+// </Button>
   function Movie({ movie,id ,deletebutton}) {
     const [show, setshow] = useState(false)
     const disstyle = {
       display: show ? "none" : "block",
-    }
+    };
     const style = {
       color: movie.rating > 8 ? "green" : "crimson",
-    }
+    };
     const navigate=useNavigate();
     return (
       <Card className='movies'>
-        <img className='img' src={movie.poster}></img>
+        <img className='img' alt="img" src={movie.poster}></img>
         <CardContent>
           <div className='ratings'>
           <h2>{movie.name}  
@@ -203,7 +209,8 @@ const getmovies = ()=>{
         <p style={disstyle}>{movie.summary}</p>
         </CardContent>
         <CardActions>
-        <Like /> {deletebutton}
+        <Like /> 
+        {deletebutton}
         </CardActions>
         
       
