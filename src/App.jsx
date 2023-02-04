@@ -29,6 +29,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {Addmovie}from"./Add movie";
 import { Margin } from '@mui/icons-material';
+import { BasicForm } from './Basicform';
 
 // import { useNavigate } from 'react-router-dom';
 // import{double} from './welcome'
@@ -70,6 +71,7 @@ minHeight:"100vh",
         <Button onClick={()=>navigate("/Movielist")} color="inherit">movielist</Button>
         <Button onClick={()=>navigate("/color game")} color="inherit">color game</Button>
         <Button onClick={()=>navigate("/Add movie")} color="inherit">Add movie</Button>
+        <Button onClick={()=>navigate("/BasicForm")} color="inherit">basic form</Button>
 
 <div className='modecorner'>
         <Button onClick={()=>setmode(mode==="light"?"dark":"light")} color="inherit" startIcon={mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}>{mode==="light"?"dark":"light"} mode</Button>
@@ -84,6 +86,8 @@ minHeight:"100vh",
         <Route path="/flimlist" element={ <Navigate replace to ="/Movielist"/>} />
         <Route path="/Movielist/:id" element={<Mdetails />} />
         <Route path="/color game" element={<Color/>} />
+        <Route path="/BasicForm" element={<BasicForm/>} />
+
         <Route path="/Add movie" element={<Addmovie />} />
 
         <Route path="*" element={<Not_found />} />
@@ -94,6 +98,7 @@ minHeight:"100vh",
 
     </ThemeProvider>
   );
+
   function Mdetails(){
     const [movie,setmovie] =useState({});
     const {id} = useParams();
@@ -103,7 +108,7 @@ minHeight:"100vh",
       .then((data)=>data.json())
       .then((mvs)=>setmovie(mvs))
   },[id]);
-        //  const movie=movieflow[id];
+        // const movie=movieflow[id];
         const style = {
           color: movie.rating > 8 ? "green" : "crimson",
         };
@@ -159,8 +164,8 @@ const getmovies =()=>{
   fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie",{method: "GET"})
   .then((data)=>data.json())
   .then((mvs)=>setmovieflow(mvs))
-};
-    useEffect(()=>getmovies(),[]) ;
+}
+    useEffect(()=>getmovies(),[]);
   const deletemovie=async(id)=>{
    await fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method: "DELETE"})
     getmovies();
@@ -216,7 +221,7 @@ const getmovies =()=>{
       
       </Card>
     );
-  }
+  };
 
   function Like() {
     const [like, setlike] = useState(0)

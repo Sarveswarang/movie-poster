@@ -26,7 +26,7 @@ export function Addmovie(){
 
 
 
-    return(
+    return( 
       <div className='add-movie-form'>
 <TextField onChange={(a) => setname(a.target.value)} label="name" variant="outlined" />
 <TextField onChange={(a) => setposter(a.target.value)} label="poster" variant="outlined" />
