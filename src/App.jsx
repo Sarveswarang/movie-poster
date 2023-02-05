@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -30,6 +31,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {Addmovie}from"./Add movie";
 import { Margin } from '@mui/icons-material';
 import { BasicForm } from './Basicform';
+  import { useFormik } from 'formik';
+  import * as yup from "yup";
 
 // import { useNavigate } from 'react-router-dom';
 // import{double} from './welcome'
@@ -85,6 +88,8 @@ minHeight:"100vh",
         <Route path="/Movielist" element={<Movielist />} />
         <Route path="/flimlist" element={ <Navigate replace to ="/Movielist"/>} />
         <Route path="/Movielist/:id" element={<Mdetails />} />
+        <Route path="/movie/edit/:id" element={<Editmovie />} />
+        {/* /movie/edit/${nm.id} */}
         <Route path="/color game" element={<Color/>} />
         <Route path="/BasicForm" element={<BasicForm/>} />
 
@@ -104,7 +109,7 @@ minHeight:"100vh",
     const {id} = useParams();
 
     useEffect(()=>{
-      fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`)
+      fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method:"GET"})
       .then((data)=>data.json())
       .then((mvs)=>setmovie(mvs))
   },[id]);
@@ -171,13 +176,16 @@ const getmovies =()=>{
     getmovies();
 
   };
+  const navigate=useNavigate();
     return ( 
       <div>
       
       <div className='movie-css'>
         {movieflow.map((nm) => (<Movie key={nm.id} movie={nm} id={nm.id} 
         deletebutton={<IconButton color="error"sx={{marginLeft:"auto"}} 
-        onClick={()=>deletemovie(nm.id)}>{<DeleteIcon />}</IconButton >}/>))};
+        onClick={()=>deletemovie(nm.id)}>{<DeleteIcon />}</IconButton >}
+        editbutton={<IconButton color="secondary"sx={{marginLeft:"auto"}} 
+        onClick={()=>navigate(`/movie/edit/${nm.id}`)}>{<EditIcon />}</IconButton >}/>))};
       </div>
       </div>
     );
@@ -186,8 +194,8 @@ const getmovies =()=>{
   // <Button variant="outlined" startIcon={<DeleteIcon />}>
 //   Delete
 // </Button>
-  function Movie({ movie,id ,deletebutton}) {
-    const [show, setshow] = useState(false)
+  function Movie({ movie,id ,deletebutton,editbutton}) {
+    const [show, setshow] = useState(true)
     const disstyle = {
       display: show ? "none" : "block",
     };
@@ -215,7 +223,7 @@ const getmovies =()=>{
         </CardContent>
         <CardActions>
         <Like /> 
-        {deletebutton}
+        {deletebutton}{editbutton}
         </CardActions>
         
       
@@ -246,6 +254,104 @@ const getmovies =()=>{
     );
 
   }
- 
+  
+  
+  
+  
+   function Editmovie(){
+    const [movie,setmovie] =useState(null);
+    const {id} = useParams();
+
+    useEffect(()=>{
+      fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method:"GET"})
+      .then((data)=>data.json())
+      .then((mvs)=>setmovie(mvs))
+  },[id]);
+  console.log(movie)
+  return movie?<Editmovieform movie={movie}/>:<h2>loading</h2>;
+}
+function Editmovieform({movie}){
+    const formValidationSchema=yup.object({
+      name:yup.string().required(),
+      poster:yup.string().required().min(4).url(),
+      rating:yup.number().required().min(0,"need greater").max(10,"too big"),
+      summary:yup.string().required().min(20),
+    trailer:yup.string().required().min(4).url(),
+    });
+    const {handleChange,handleBlur,handleSubmit,values,errors,touched}=
+    useFormik({initialValues:{name:movie.name,
+      poster:movie.poster,
+      rating:movie.rating,
+      summary:movie.summary,
+      trailer:movie.trailer,},
+    validationSchema:formValidationSchema,
+  onSubmit:(updatedmovie)=>{console.log(updatedmovie);updatemovie(updatedmovie);}});
+  
+    const navigate=useNavigate();
+    const updatemovie=async(updatedmovie)=>{
+      
+    await fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${movie.id}`,
+    {method: "PUT",body: JSON.stringify(updatedmovie),
+    headers:{"Content-Type": "application/json",
+  },});
+    navigate("/Movielist");
+  };
+  
+      return( 
+        <form onSubmit={handleSubmit}className='add-movie-form'>
+  <TextField 
+  name='name'
+  onChange={handleChange} 
+  onBlur={handleBlur}
+  value={values.name}
+   label="name" 
+   variant="outlined" 
+   error={errors.name&& touched.name}
+   helperText={errors.name&& touched.name?errors.name:null}/>
+  
+  <TextField
+  name='poster'
+  onChange={handleChange} 
+  onBlur={handleBlur}
+  value={values.poster}  
+  label="poster"
+     variant="outlined" 
+     error={errors.poster&& touched.poster}
+     helperText={errors.poster&& touched.poster?errors.poster:null}/>
+   <TextField 
+  name='rating'
+  onChange={handleChange} 
+  onBlur={handleBlur}
+  value={values.rating}
+  label="rating"
+   variant="outlined"
+   error={errors.rating&& touched.rating}
+   helperText={errors.rating&& touched.rating?errors.rating:null}/>
+  <TextField
+  name='summary'
+  onChange={handleChange} 
+  onBlur={handleBlur}
+  value={values.summary} 
+  label="summary"
+    variant="outlined" 
+    error={errors.summary&& touched.summary}
+    helperText={errors.summary&& touched.summary?errors.summary:null}/>
+  <TextField 
+  name='trailer'
+  onChange={handleChange} 
+  onBlur={handleBlur}
+  value={values.trailer}
+  label="trailer"
+   variant="outlined" 
+   error={errors.trailer&& touched.trailer}
+   helperText={errors.trailer&& touched.trailer?errors.trailer:null}/>
+    
+    <Button color='success'  type='submit'
+    variant="contained">save</Button>
+  
+  </form>
+      )
+    }
+  
 }
 export default App
