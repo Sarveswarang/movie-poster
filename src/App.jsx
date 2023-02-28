@@ -33,6 +33,7 @@ import { Margin } from '@mui/icons-material';
 import { BasicForm } from './Basicform';
   import { useFormik } from 'formik';
   import * as yup from "yup";
+import { API } from './global';
 
 // import { useNavigate } from 'react-router-dom';
 // import{double} from './welcome'
@@ -55,7 +56,7 @@ borderRadius:"0px",
 minHeight:"100vh",
   };
 //   useEffect(()=>{
-//     fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie")
+//     fetch("${API}/movie")
 //     .then((data)=>data.json())
 //     .then((mvs)=>setmovieflow(mvs))
 // },[]);
@@ -109,7 +110,7 @@ minHeight:"100vh",
     const {id} = useParams();
 
     useEffect(()=>{
-      fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method:"GET"})
+      fetch(`${API}/movie/${id}`,{method:"GET"})
       .then((data)=>data.json())
       .then((mvs)=>setmovie(mvs))
   },[id]);
@@ -166,13 +167,13 @@ minHeight:"100vh",
   function Movielist() {
     const [movieflow,setmovieflow] =useState( []);
 const getmovies =()=>{
-  fetch("https://63db579fb8e69785e47fc741.mockapi.io/movie",{method: "GET"})
+  fetch(`${API}/movie`,{method: "GET"})
   .then((data)=>data.json())
   .then((mvs)=>setmovieflow(mvs))
 }
     useEffect(()=>getmovies(),[]);
   const deletemovie=async(id)=>{
-   await fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method: "DELETE"})
+   await fetch(`${API}/movie/${id}`,{method: "DELETE"})
     getmovies();
 
   };
@@ -263,7 +264,7 @@ const getmovies =()=>{
     const {id} = useParams();
 
     useEffect(()=>{
-      fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${id}`,{method:"GET"})
+      fetch(`${API}/movie/${id}`,{method:"GET"})
       .then((data)=>data.json())
       .then((mvs)=>setmovie(mvs))
   },[id]);
@@ -290,7 +291,7 @@ function Editmovieform({movie}){
     const navigate=useNavigate();
     const updatemovie=async(updatedmovie)=>{
       
-    await fetch(`https://63db579fb8e69785e47fc741.mockapi.io/movie/${movie.id}`,
+    await fetch(`${API}/movie/${movie.id}`,
     {method: "PUT",body: JSON.stringify(updatedmovie),
     headers:{"Content-Type": "application/json",
   },});
